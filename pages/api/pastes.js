@@ -5,6 +5,7 @@ const owner = "Jrizz817";
 const repo = "pastex";
 const path = "pastes.json";
 
+// Rate limit por IP
 const rateLimitMap = {};
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 2 * 60 * 1000; // 2 minutos
@@ -58,8 +59,15 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "GET") {
-      const { id } = req.query;
+      const { id, raw } = req.query;
       const { pastes } = await getPastes();
+
+      if (raw === "true") {
+        if (!id || !pastes[id]) return res.status(404).send("Paste não encontrado");
+        res.setHeader("Content-Type", "text/plain");
+        return res.status(200).send(pastes[id].text);
+      }
+
       if (!id) return res.status(200).json(pastes);
       if (!pastes[id]) return res.status(404).json({ error: "Paste não encontrado" });
       return res.status(200).json(pastes[id]);
@@ -70,4 +78,4 @@ export default async function handler(req, res) {
     console.error(err);
     res.status(500).json({ error: "Erro no servidor" });
   }
-        }
+}
