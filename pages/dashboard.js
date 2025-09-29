@@ -25,7 +25,7 @@ export default function Dashboard() {
   };
 
   const createPaste=async()=>{
-    if(!text) return alert("Digite algo para criar paste");
+    if(!text) return alert("Digite o código pra criar paste");
     const res=await fetch("/api/pastes",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -72,6 +72,11 @@ export default function Dashboard() {
               <li key={p.id} className="p-2 border rounded hover:bg-gray-50 transition">
                 <strong>ID:</strong> {p.id} | <strong>Criado em:</strong> {new Date(p.created_at).toLocaleString()}
                 <p className="mt-1">{p.text}</p>
+                <a 
+                  href={`/api/pastes?id=${p.id}&raw=true`} 
+                  target="_blank" 
+                  className="text-blue-600 underline mt-1 inline-block hover:text-blue-800"
+                >Ver Raw</a>
               </li>
             ))}
           </ul>
@@ -80,4 +85,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
+                    }
